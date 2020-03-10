@@ -30,10 +30,11 @@ ecbuild_requires_macro_version( 2.5 )
 
 ecbuild_declare_project()
 
-ecbuild_enable_fortran( REQUIRED )
+ecbuild_enable_fortran( REQUIRED MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/module )
 ecbuild_add_cxx11_flags()
 
 set( METIS_LINKER_LANGUAGE CXX )
+
 
 ################################################################################
 # Standard compiler flags
@@ -62,9 +63,10 @@ endif()
 
 list( APPEND METIS_TPLS )
 
-set( METIS_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src
-                        ${CMAKE_CURRENT_BINARY_DIR}/src
-                        ${CMAKE_Fortran_MODULE_DIRECTORY} )
+list( APPEND METIS_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_BINARY_DIR}/src
+    ${CMAKE_Fortran_MODULE_DIRECTORY})
 
 set( METIS_LIBRARIES metis )
 
@@ -87,8 +89,10 @@ include_directories( ${METIS_INCLUDE_DIRS}
 
 add_subdirectory( src )
 
-if(ECBUILD_INSTALL_FORTRAN_MODULES)
-  install(DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR} DESTINATION ${INSTALL_INCLUDE_DIR} )
+if( ECBUILD_INSTALL_FORTRAN_MODULES )
+    install( DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}
+             DESTINATION module/fckit
+             COMPONENT modules )
 endif()
 
 ################################################################################
